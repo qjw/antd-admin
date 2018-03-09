@@ -6,12 +6,11 @@ import styles from './Layout.less'
 import Menus from './Menu'
 
 const Sider = ({
-  siderFold, darkTheme, location, changeTheme, navOpenKeys, changeOpenKeys, menu,
+  siderFold, location, changeTheme, navOpenKeys, changeOpenKeys, menu,
 }) => {
   const menusProps = {
     menu,
     siderFold,
-    darkTheme,
     location,
     navOpenKeys,
     changeOpenKeys,
@@ -23,10 +22,6 @@ const Sider = ({
         {siderFold ? '' : <span>{config.name}</span>}
       </div>
       <Menus {...menusProps} />
-      {!siderFold ? <div className={styles.switchtheme}>
-        <span><Icon type="bulb" />Switch Theme</span>
-        <Switch onChange={changeTheme} defaultChecked={darkTheme} checkedChildren="Dark" unCheckedChildren="Light" />
-      </div> : ''}
     </div>
   )
 }
@@ -34,7 +29,6 @@ const Sider = ({
 Sider.propTypes = {
   menu: PropTypes.array,
   siderFold: PropTypes.bool,
-  darkTheme: PropTypes.bool,
   location: PropTypes.object,
   changeTheme: PropTypes.func,
   navOpenKeys: PropTypes.array,

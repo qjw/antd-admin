@@ -6,18 +6,18 @@ import { arrayToTree, queryArray } from 'utils'
 import pathToRegexp from 'path-to-regexp'
 
 const Menus = ({
-  siderFold, darkTheme, navOpenKeys, changeOpenKeys, menu, location,
+  siderFold, navOpenKeys, changeOpenKeys, menu, location,
 }) => {
   // 生成树状
-  const menuTree = arrayToTree(menu.filter(_ => _.mpid !== '-1'), 'id', 'mpid')
+  const menuTree = arrayToTree(menu.filter(_ => _.mpid !== -1), 'id', 'pid')
   const levelMap = {}
 
   // 递归生成菜单
   const getMenus = (menuTreeN, siderFoldN) => {
     return menuTreeN.map((item) => {
       if (item.children) {
-        if (item.mpid) {
-          levelMap[item.id] = item.mpid
+        if (item.pid) {
+          levelMap[item.id] = item.pid
         }
         return (
           <Menu.SubMenu
@@ -35,7 +35,7 @@ const Menus = ({
         <Menu.Item key={item.id}>
           <Link to={item.route || '#'} style={siderFoldN ? { width: 10 } : {}}>
             {item.icon && <Icon type={item.icon} />}
-            {item.name}
+            {(!siderFoldN || !menuTree.includes(item)) && item.name}
           </Link>
         </Menu.Item>
       )
@@ -101,7 +101,7 @@ const Menus = ({
     return result
   }
   if (currentMenu) {
-    defaultSelectedKeys = getPathArray(menu, currentMenu, 'mpid', 'id')
+    defaultSelectedKeys = getPathArray(menu, currentMenu, 'pid', 'id')
   }
 
   if (!defaultSelectedKeys) {
@@ -112,7 +112,7 @@ const Menus = ({
     <Menu
       {...menuProps}
       mode={siderFold ? 'vertical' : 'inline'}
-      theme={darkTheme ? 'dark' : 'light'}
+      theme='light'
       selectedKeys={defaultSelectedKeys}
     >
       {menuItems}
@@ -123,7 +123,6 @@ const Menus = ({
 Menus.propTypes = {
   menu: PropTypes.array,
   siderFold: PropTypes.bool,
-  darkTheme: PropTypes.bool,
   navOpenKeys: PropTypes.array,
   changeOpenKeys: PropTypes.func,
   location: PropTypes.object,

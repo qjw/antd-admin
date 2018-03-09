@@ -24,13 +24,12 @@ const App = ({
   children, dispatch, app, loading, location,
 }) => {
   const {
-    user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions,
+    siderFold, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions,
   } = app
   let { pathname } = location
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
   const { iconFontJS, iconFontCSS, logo } = config
   const current = menu.filter(item => pathToRegexp(item.route || '').exec(pathname))
-  const hasPermission = current.length ? permissions.visit.includes(current[0].id) : false
   const { href } = window.location
 
   if (lastHref !== href) {
@@ -43,7 +42,6 @@ const App = ({
 
   const headerProps = {
     menu,
-    user,
     location,
     siderFold,
     isNavbar,
@@ -51,9 +49,6 @@ const App = ({
     navOpenKeys,
     switchMenuPopover () {
       dispatch({ type: 'app/switchMenuPopver' })
-    },
-    logout () {
-      dispatch({ type: 'app/logout' })
     },
     switchSider () {
       dispatch({ type: 'app/switchSider' })
@@ -67,7 +62,6 @@ const App = ({
     menu,
     location,
     siderFold,
-    darkTheme,
     navOpenKeys,
     changeTheme () {
       dispatch({ type: 'app/switchTheme' })
@@ -101,7 +95,7 @@ const App = ({
         {iconFontCSS && <link rel="stylesheet" href={iconFontCSS} />}
       </Helmet>
 
-      <Layout className={classnames({ [styles.dark]: darkTheme, [styles.light]: !darkTheme })}>
+      <Layout className={classnames({ [styles.dark]: false, [styles.light]: true })}>
         {!isNavbar && <Sider
           trigger={null}
           collapsible
@@ -114,7 +108,7 @@ const App = ({
           <Header {...headerProps} />
           <Content>
             <Bread {...breadProps} />
-            {hasPermission ? children : <Error />}
+            { children }
           </Content>
           <Footer >
             {config.footerText}

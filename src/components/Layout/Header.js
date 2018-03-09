@@ -14,7 +14,6 @@ const Header = ({
   const menusProps = {
     menu,
     siderFold: false,
-    darkTheme: false,
     isNavbar,
     handleClickNavMenu: switchMenuPopover,
     location,
@@ -36,24 +35,6 @@ const Header = ({
           <Icon type={classnames({ 'menu-unfold': siderFold, 'menu-fold': !siderFold })} />
         </div>}
       <div className={styles.rightWarpper}>
-        <div className={styles.button}>
-          <Icon type="mail" />
-        </div>
-        <Menu mode="horizontal" onClick={handleClickMenu}>
-          <SubMenu
-            style={{
-              float: 'right',
-            }}
-            title={<span>
-              <Icon type="user" />
-              {user.username}
-            </span>}
-          >
-            <Menu.Item key="logout">
-              Sign out
-            </Menu.Item>
-          </SubMenu>
-        </Menu>
       </div>
     </Layout.Header>
   )

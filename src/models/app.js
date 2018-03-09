@@ -6,8 +6,6 @@
 import { routerRedux } from 'dva/router'
 import { parse } from 'qs'
 import config from 'config'
-import { EnumRoleType } from 'enums'
-import { query, logout } from 'services/app'
 import * as menusService from 'services/menus'
 import queryString from 'query-string'
 
@@ -24,13 +22,12 @@ export default {
       {
         id: 1,
         icon: 'laptop',
-        name: 'Dashboard',
-        router: '/dashboard',
+        name: 'User',
+        router: '/user',
       },
     ],
     menuPopoverVisible: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
-    darkTheme: window.localStorage.getItem(`${prefix}darkTheme`) === 'true',
     isNavbar: document.body.clientWidth < 769,
     navOpenKeys: JSON.parse(window.localStorage.getItem(`${prefix}navOpenKeys`)) || [],
     locationPathname: '',
@@ -63,60 +60,23 @@ export default {
 
   },
   effects: {
-
     * query ({
       payload,
     }, { call, put, select }) {
-      const { success, user } = yield call(query, payload)
-      const { locationPathname } = yield select(_ => _.app)
-      if (success && user) {
-        const { list } = yield call(menusService.query)
-        const { permissions } = user
-        let menu = list
-        if (permissions.role === EnumRoleType.ADMIN || permissions.role === EnumRoleType.DEVELOPER) {
-          permissions.visit = list.map(item => item.id)
-        } else {
-          menu = list.filter((item) => {
-            const cases = [
-              permissions.visit.includes(item.id),
-              item.mpid ? permissions.visit.includes(item.mpid) || item.mpid === '-1' : true,
-              item.bpid ? permissions.visit.includes(item.bpid) : true,
-            ]
-            return cases.every(_ => _)
-          })
-        }
+        const { locationPathname } = yield select(_ => _.app)
+        const menuData = yield call(menusService.query);
+        let menu = menuData.data;
         yield put({
           type: 'updateState',
           payload: {
-            user,
-            permissions,
             menu,
           },
         })
-        if (location.pathname === '/login') {
+        if (location.pathname === '/') {
           yield put(routerRedux.push({
-            pathname: '/dashboard',
+            pathname: '/user',
           }))
         }
-      } else if (config.openPages && config.openPages.indexOf(locationPathname) < 0) {
-        yield put(routerRedux.push({
-          pathname: '/login',
-          search: queryString.stringify({
-            from: locationPathname,
-          }),
-        }))
-      }
-    },
-
-    * logout ({
-      payload,
-    }, { call, put }) {
-      const data = yield call(logout, parse(payload))
-      if (data.success) {
-        yield put({ type: 'query' })
-      } else {
-        throw (data)
-      }
     },
 
     * changeNavbar (action, { put, select }) {
@@ -141,14 +101,6 @@ export default {
       return {
         ...state,
         siderFold: !state.siderFold,
-      }
-    },
-
-    switchTheme (state) {
-      window.localStorage.setItem(`${prefix}darkTheme`, !state.darkTheme)
-      return {
-        ...state,
-        darkTheme: !state.darkTheme,
       }
     },
 

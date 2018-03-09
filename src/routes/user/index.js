@@ -6,7 +6,6 @@ import { Row, Col, Button, Popconfirm } from 'antd'
 import { Page } from 'components'
 import queryString from 'query-string'
 import List from './List'
-import Filter from './Filter'
 import Modal from './Modal'
 
 
@@ -136,7 +135,6 @@ const User = ({
 
   return (
     <Page inner>
-      <Filter {...filterProps} />
       {
         selectedRowKeys.length > 0 &&
         <Row style={{ marginBottom: 24, textAlign: 'right', fontSize: 13 }}>
