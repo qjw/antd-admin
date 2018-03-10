@@ -9,11 +9,20 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   CORS: [],
   apiPrefix: '/api/v1',
+  indexPage: "/namespaces",
+  countPePage: 10,
   APIV1,
   api: {
     userInfo: `${APIV1}/userInfo`,
     users: `${APIV1}/users`,
     user: `${APIV1}/user/:id`,
     menus: `${APIV1}/menus`,
+    namespaces: {
+      "query": `${APIV1}/namespaces/`,
+    }
   },
+  route: {
+    namespaces: "/namespaces",
+  }
+
 }

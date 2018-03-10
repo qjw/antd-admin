@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import { Switch, Route, Redirect, routerRedux } from 'dva/router'
 import dynamic from 'dva/dynamic'
 import App from 'routes/app'
+import config from 'utils/config'
 import { LocaleProvider } from 'antd'
 import enUS from 'antd/lib/locale-provider/en_US'
 
 const { ConnectedRouter } = routerRedux
+const { indexPage } = config
 
 const Routers = function ({ history, app }) {
   const error = dynamic({
@@ -22,6 +24,10 @@ const Routers = function ({ history, app }) {
       path: '/user/:id',
       models: () => [import('./models/user/detail')],
       component: () => import('./routes/user/detail/'),
+    }, {
+      path: '/namespaces',
+      models: () => [import('./models/namespace/')],
+      component: () => import('./routes/namespace/'),
     },
   ]
 
@@ -30,7 +36,7 @@ const Routers = function ({ history, app }) {
       <LocaleProvider locale={enUS}>
         <App>
           <Switch>
-            <Route exact path="/" render={() => (<Redirect to="/user" />)} />
+            <Route exact path="/" render={() => (<Redirect to={indexPage} />)} />
             {
             routes.map(({ path, ...dynamics }, key) => (
               <Route key={key}

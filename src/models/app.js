@@ -9,7 +9,7 @@ import config from 'config'
 import * as menusService from 'services/menus'
 import queryString from 'query-string'
 
-const { prefix } = config
+const { prefix,indexPage } = config
 
 export default {
   namespace: 'app',
@@ -19,12 +19,6 @@ export default {
       visit: [],
     },
     menu: [
-      {
-        id: 1,
-        icon: 'laptop',
-        name: 'User',
-        router: '/user',
-      },
     ],
     menuPopoverVisible: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
@@ -74,7 +68,7 @@ export default {
         })
         if (location.pathname === '/') {
           yield put(routerRedux.push({
-            pathname: '/user',
+            pathname: indexPage,
           }))
         }
     },
