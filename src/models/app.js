@@ -66,7 +66,7 @@ export default {
             menu,
           },
         })
-        if (location.pathname === '/') {
+        if (location.hash === '#/') {
           yield put(routerRedux.push({
             pathname: indexPage,
           }))

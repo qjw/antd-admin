@@ -5,8 +5,8 @@ import classnames from 'classnames'
 import {DropOption} from 'components'
 import {Link} from 'react-router-dom'
 import queryString from 'query-string'
-import {routerRedux} from 'dva/router'
 import styles from './list.less'
+import {routerRedux} from 'dva/router'
 import {buildUrl} from '../../utils/url'
 import { config } from 'utils'
 const { route } = config;
@@ -21,14 +21,19 @@ const List = ({isMotion, location, dispatch, ...tableProps}) => {
   }
 
   const handleMenuClick = (record, e) => {
+    if (e.key === '1') {
       dispatch(routerRedux.push({
-        pathname: buildUrl(route.secrets,{namespace: record.metadata.name}),
+        pathname: buildUrl(route.secretDetail,{
+            namespace: record.metadata.namespace,
+            id: record.metadata.name
+        }),
       }))
+    }
   };
 
   const calcMenu = (record) => {
     const arr = [
-      {key: '1', name: '密码'},
+      {key: '1', name: '详情'},
     ];
     return arr
   };
@@ -39,8 +44,13 @@ const List = ({isMotion, location, dispatch, ...tableProps}) => {
       dataIndex: 'metadata.name',
       key: 'name',
       render: (text, record) => <Link to={
-        buildUrl(route.secrets,{namespace:record.metadata.name})
+        buildUrl(route.secretDetail,{namespace:record.metadata.namespace,id:record.metadata.name})
       }>{text}</Link>,
+    },
+    {
+      title: '命名空间',
+      dataIndex: 'metadata.namespace',
+      key: 'namespace',
     },
     {
       title: '标签',
@@ -85,9 +95,9 @@ const List = ({isMotion, location, dispatch, ...tableProps}) => {
       }
     },
     {
-      title: '创建时间',
-      dataIndex: 'metadata.creationTimestamp',
-      key: 'creationTimestamp',
+      title: '类型',
+      dataIndex: 'type',
+      key: 'type',
       width: 170,
     },
     {

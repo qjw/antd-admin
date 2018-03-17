@@ -4,50 +4,52 @@ import { Breadcrumb, Icon } from 'antd'
 import { Link } from 'react-router-dom'
 import pathToRegexp from 'path-to-regexp'
 import { queryArray } from 'utils'
-import styles from './Layout.less'
+import styles from './Bread.less'
+import {parseUrl,buildUrl} from '../../utils/url'
 
 const Bread = ({ menu, location }) => {
   // 匹配当前路由
   let pathArray = []
-  let current
+  let current;
+  let match;
   for (let index in menu) {
-    if (menu[index].route && pathToRegexp(menu[index].route).exec(location.pathname)) {
-      current = menu[index]
-      break
+    if (menu[index].route) {
+      match = pathToRegexp(menu[index].route).exec(location.pathname);
+      if(match){
+        current = menu[index];
+        break
+      }
     }
   }
 
   const getPathArray = (item) => {
-    pathArray.unshift(item)
-    if (item.bpid) {
-      getPathArray(queryArray(menu, item.bpid, 'id'))
+    pathArray.unshift(item);
+    if (item.pid) {
+      getPathArray(queryArray(menu, item.pid, 'id'))
     }
-  }
+  };
 
-  let paramMap = {}
   if (!current) {
     pathArray.push(menu[0] || {
       id: 1,
       icon: 'laptop',
       name: 'Dashboard',
-    })
+    });
     pathArray.push({
       id: 404,
       name: 'Not Found',
     })
   } else {
     getPathArray(current)
+  }
 
-    let keys = []
-    let values = pathToRegexp(current.route, keys).exec(location.pathname.replace('#', ''))
-    if (keys.length) {
-      keys.forEach((currentValue, index) => {
-        if (typeof currentValue.name !== 'string') {
-          return
-        }
-        paramMap[currentValue.name] = values[index + 1]
-      })
-    }
+  // 自动填充
+  if(current){
+    const urlDatas = parseUrl(location.pathname, current.route);
+    pathArray.forEach(function (item) {
+      if(item === current || !item.route) return;
+      item.route2 = buildUrl(item.route,urlDatas)
+    })
   }
 
   // 递归查找父级
@@ -59,8 +61,8 @@ const Bread = ({ menu, location }) => {
     )
     return (
       <Breadcrumb.Item key={key}>
-        {((pathArray.length - 1) !== key)
-          ? <Link to={pathToRegexp.compile(item.route || '')(paramMap) || '#'}>
+        {((pathArray.length - 1) !== key && "route" in item)
+          ? <Link to={item.route2 || '#'}>
             {content}
           </Link>
           : content}

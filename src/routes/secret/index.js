@@ -6,8 +6,8 @@ import {Page} from 'components'
 import queryString from 'query-string'
 import List from './list'
 
-const pageKey = "namespaces";
-const Namespace = ({location, dispatch, state, loading}) => {
+const pageKey = "secrets";
+const Secret = ({location, dispatch, state, loading}) => {
   location.query = queryString.parse(location.search);
   const {list, pagination} = state;
   const {count} = pagination;
@@ -27,11 +27,11 @@ const Namespace = ({location, dispatch, state, loading}) => {
   )
 }
 
-Namespace.propTypes = {
+Secret.propTypes = {
   state: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,
 };
 
-export default connect(({namespaces, loading}) => ({state: namespaces, loading}))(Namespace)
+export default connect(({secrets, loading}) => ({state: secrets, loading}))(Secret)

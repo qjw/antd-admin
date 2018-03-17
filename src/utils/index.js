@@ -99,6 +99,16 @@ const arrayToTree = (array, id = 'id', pid = 'pid', children = 'children') => {
   return result
 }
 
+const resolveObject = function(obj, path){
+    path = path.split('.');
+    var current = obj;
+    while(path.length) {
+        if(typeof current !== 'object') return undefined;
+        current = current[path.shift()];
+    }
+    return current;
+}
+
 module.exports = {
   config,
   request,
@@ -107,4 +117,5 @@ module.exports = {
   queryURL,
   queryArray,
   arrayToTree,
+  resolveObject
 }

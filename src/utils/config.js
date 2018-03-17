@@ -19,10 +19,19 @@ module.exports = {
     menus: `${APIV1}/menus`,
     namespaces: {
       "query": `${APIV1}/namespaces/`,
+    },
+    secrets: {
+      "query": `${APIV1}/secrets/:namespace`,
+      "detail": `${APIV1}/secrets/:namespace/:id`,
+      "update": `${APIV1}/secrets/:namespace/:id`,
+      "remove": `${APIV1}/secrets/:namespace/:id`,
+      "decode": `${APIV1}/base64`,
     }
   },
   route: {
     namespaces: "/namespaces",
+    secrets: "/secrets/:namespace",
+    secretDetail: "/secrets/:namespace/detail/:id",
   }
 
 }

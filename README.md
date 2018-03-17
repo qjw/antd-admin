@@ -115,3 +115,19 @@ npm run lint
     ```
 
 
+## 部署说明
+若使用nginx提前做反向代理，不用修改默认配配置
+
+若使用后端做url转发，比如前端都使用Path `frontend`，那么`.roadhogrc.js`中下面配置，必须使用相对路径
+```
+publicPath: `./${version}/`
+```
+
+同时`src/utils/config.js`中如下三个路径，需要做适当的修改
+```
+module.exports = {
+  logo: '/frontend/logo.svg',
+  iconFontCSS: '/frontend/iconfont.css',
+  iconFontJS: '/frontend/iconfont.js',
+}
+```

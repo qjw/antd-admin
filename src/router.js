@@ -8,7 +8,7 @@ import { LocaleProvider } from 'antd'
 import enUS from 'antd/lib/locale-provider/en_US'
 
 const { ConnectedRouter } = routerRedux
-const { indexPage } = config
+const { indexPage,route } = config
 
 const Routers = function ({ history, app }) {
   const error = dynamic({
@@ -25,9 +25,17 @@ const Routers = function ({ history, app }) {
       models: () => [import('./models/user/detail')],
       component: () => import('./routes/user/detail/'),
     }, {
-      path: '/namespaces',
+      path: route.namespaces,
       models: () => [import('./models/namespace/')],
       component: () => import('./routes/namespace/'),
+    }, {
+      path: route.secrets,
+      models: () => [import('./models/secret/')],
+      component: () => import('./routes/secret/'),
+    }, {
+      path: route.secretDetail,
+      models: () => [import('./models/secret/detail')],
+      component: () => import('./routes/secret/detail'),
     },
   ]
 
